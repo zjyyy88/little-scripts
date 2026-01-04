@@ -38,7 +38,7 @@ data = np.loadtxt('msd.dat')
         plt.tight_layout()
         plt.savefig('msd_plot.png', dpi=300, bbox_inches='tight')
         plt.show()
-# 接下来直接得到 离子迁移率， 单位是 mS/cm
+# 接下来直接得到 离子迁移率， 单位是 mS/cm,diffusity单位是 cm^2/S
 C = diff.conductivity
 D = diff.diffusivity
 
