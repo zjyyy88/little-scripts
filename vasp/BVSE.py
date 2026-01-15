@@ -2,9 +2,8 @@
 #1.install BVlain
 #2.准备cif文件，以mp下载的cif文件格式为标准
 #3.运行脚本
-#4.获得输出的grd文件
-#5.导入vesta进行可视化，等值面选择negative，数值小点
-#
+#4.获得输出的grd文件,cube文件。grd不包含原子，cube包含原子
+#5.导入vesta进行可视化，等值面选择negative，数值小点，其中黄色部分代表通道
 
 import os
 from bvlain import Lain  # 从bvlain库导入Lain类
@@ -18,14 +17,24 @@ params = {
     'r_cut': 10.0,          # 截断半径为10.0
     'resolution': 0.2,      # 分辨率为0.2
     'k': 100                # k值为100
+    #'use_softbv_covalent_radii': False # default is False, use True to compare results with softBV
 }
 
-_ = calc.bvse_distribution(**params) # 计算BVSE分布
-energies = calc.percolation_barriers(encut = 5.0)  # 计算渗流势垒，能量截断为3.0
-# 安全拼接输出grd文件名，避免覆盖和路径错误
-#output_grd = os.path.splitext(file)[0] + '_bvse.grd'
-#calc.write_grd(output_grd, task = 'bvse')
-calc.write_grd(file)
+_ = calc.bvse_distribution(**params)
+energies = calc.percolation_barriers(encut = 5.0)
+for key in energies.keys():
+    print(f'{key[-2:]} percolation barrier is {round(energies[key], 4)} eV')
+#calc.write_grd(file + '_bvse', task = 'bvse')  # saves .grd file
+calc.write_cube(file + '_bvse', task = 'bvse') # alternatively, save .cube file
+
 ###计算价态是否与设置的一致
 #table = calc.mismatch(r_cut = 4.0)  # 计算失配表，截断半径为4.0
 #print(table.to_string())  # 打印表格内容
+####计算void
+#_ = calc.void_distribution(**params)
+#radii = calc.percolation_radii()
+#for key in radii.keys():
+#    print(f'{key[-2:]} percolation barrier is {round(radii[key], 4)} angstrom')
+#calc.write_grd(file + '_void', task = 'void') # # save void distribution
+
+
