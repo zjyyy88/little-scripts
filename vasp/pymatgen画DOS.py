@@ -1,7 +1,10 @@
 from pymatgen.io.vasp import Vasprun  # 导入 pymatgen 的 Vasprun 类，用于解析 VASP 输出文件
 from pymatgen.electronic_structure.plotter import DosPlotter  # 导入 DosPlotter 类，用于绘制态密度 (DOS) 图
+import pandas as pd  # 导入 pandas 库，用于数据处理
 
-v = Vasprun(r'C:\Users\ZHANGJY02\PycharmProjects\PythonProject\vasprun.xml')  # 读取指定路径的 vasprun.xml 文件，实例化 Vasprun 对象
+# 读取指定路径的 vasprun1.xml 文件，实例化 Vasprun 对象
+# 注意：这里读取的是 vasprun1.xml，请确保文件存在
+v = Vasprun(r'C:\Users\ZHANGJY02\PycharmProjects\PythonProject\vasprun.xml')
 
 tdos = v.tdos  # 从 Vasprun 对象中获取总态密度 (Total DOS) 数据
 plottertdos = DosPlotter()  # 创建一个 DosPlotter 绘图对象
@@ -10,7 +13,24 @@ plottertdos.show(xlim=[-8, 8], ylim=[-150, 150])  # 显示图像，并设置 x �
 #plottertdos.save_plot(filename='a.eps',xlim=[-8, 4], ylim=[-20, 20]) # the default image format is eps
 # 将 save_plot 放在 show 之前，或者使用 plt.savefig
 # 注意：DosPlotter.save_plot 也会生成一个新的图，所以放在 show 后面前面都可以，但建议使用 png 格式
-plottertdos.save_plot(filename='tdos.png', xlim=[-8, 8], ylim=[-150, 150])  # 将图像保存为 a.png，自动识别格式，同时设置坐标轴范围
+plottertdos.save_plot(filename='tdos.png', xlim=[-8, 8], ylim=[-150, 150])  # 将图像保存为 tdos.png，自动识别格式，同时设置坐标轴范围
+
+
+# 获取能带结构对象，避免重复调用 (get_band_structure 比较耗时)
+bs = v.get_band_structure()  # 从 Vasprun 对象中获取能带结构 (BandStructure)
+
+# 获取gap/vbm/cbm
+bandgap_dict = bs.get_band_gap()  # 获取带隙信息字典 (包括带隙大小、跃迁类型等)
+vbm = bs.get_vbm()["energy"]  # 获取价带顶 (VBM) 的能量值
+cbm = bs.get_cbm()["energy"]  # 获取导带底 (CBM) 的能量值
+
+# 添加到数据框中
+bandgap = pd.DataFrame([bandgap_dict])  # 将带隙字典转换为 DataFrame (单行)
+bandgap["VBM"] = vbm  # 添加一列 "VBM"，值为 VBM 能量
+bandgap["CBM"] = cbm  # 添加一列 "CBM"，值为 CBM 能量
+
+print(bandgap)  # 打印带隙信息 DataFrame
+
 
 
 cdos = v.complete_dos  # 从 Vasprun 对象中获取完整的态密度数据 (Complete DOS)
