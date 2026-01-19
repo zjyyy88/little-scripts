@@ -1,4 +1,5 @@
 # 1. 导入所有依赖模块
+#安装pymatgen,mp-api,终端联网
 from pymatgen.core import Composition
 from pymatgen.analysis.phase_diagram import PhaseDiagram
 from mp_api.client import MPRester
