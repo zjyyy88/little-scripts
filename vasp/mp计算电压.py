@@ -15,7 +15,7 @@ with MPRester("HiDNgsh0Zz5RnMjLIjH3HxfFjTwnRIgb") as mpr:
 
     # 3. 定义查询的化学体系
     # 例如：查询 Li-In-Cl 体系的所有条目
-    chemsys = ["Li", "Y", "Bi","Cl"]  # 修改为您需要的体系，如 ['Li', 'P', 'S', 'Cl']
+    chemsys = ["Li", "Y","Bi","Cl"]  # 修改为您需要的体系，如 ['Li', 'P', 'S', 'Cl']
     #print(f"正在下载 {chemsys} 体系数据...")
     entries = mpr.get_entries_in_chemsys(chemsys)  # 获取该体系下的所有化合物数据
     #print(f"已下载 {len(entries)} 个条目")
