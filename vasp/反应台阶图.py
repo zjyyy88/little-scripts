@@ -9,11 +9,20 @@ plt.rcParams['mathtext.fontset'] = 'stix'  # 数学字体也用类似Times的风
 
 # ========== 在这里输入你的数据 ==========
 # 能量数据（相对于0点的能量值）
-energies = [0.0, -0.60, -0.44, 0.16, 0.45, 2.70, 3.08]
+energies = [
+            0,
+-0.6,
+0.157836,
+0.447836,
+2.697836,
+3.077836,
+]
+
 
 # 状态标签
-labels = ["*", "H2O*", "OH*+H*", "OOH*+H*", "HCl", "O*+H*", "HCl"]
-
+#labels = ["surface+H2O", "H2O*", "OH*+H*", "OOH*+H*", "HCl", "O*+H*", "HCl"]
+#labels = ["surface+$H_2O^*$", "$H_2O^*$", "$OH^*+H^*$", "HCl","$H^*+O^*$",  "HCl"]#被$包围的部分会被渲染为下标或上标,字体为斜体，_2渲染为₂, ^*渲染为上标*
+labels = ["surface+$\mathrm{H_2O^*}$", "$\mathrm{H_2O^*}$", "$\mathrm{OH^*+H^*}$", "HCl","$\mathrm{H^*+O^*}$",  "HCl"]
 # ========== 绑定参数设置 ==========
 step_width = 1.0      # 台阶宽度
 step_gap = 0.3        # 台阶间距
@@ -57,11 +66,15 @@ for i in range(n):
         if diff > 0:  # 能量上升，标注放右上方
             offset_x = 0.1
             offset_y = 0.0
+            ha= 'left'
         else:  # 能量下降，标注放左下方
-            offset_x = -0.1
+            offset_x = - 0.1
             offset_y = -0.0
+            ha= 'right'
         ax.text(mid_x + offset_x, mid_y + offset_y, f"{diff:+.2f}", 
-                ha='left', va='center', fontsize=18, color='red')
+                #ha='left',
+                ha= ha,
+                 va='center', fontsize=18, color='red')
 
 # 画零能量参考线
 ax.axhline(y=0, color='gray', linestyle=':', linewidth=0.8, alpha=0.5)
